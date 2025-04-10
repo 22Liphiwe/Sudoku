@@ -1,0 +1,78 @@
+/* styles.css */
+
+/* General body styles */
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  margin-top: 20px;
+}
+
+h1 {
+  margin-bottom: 20px;
+}
+
+/* Table and grid styling */
+table {
+  margin: auto;
+  border-collapse: collapse;
+  border: 3px solid #000; /* Thick border around the entire grid */
+}
+
+td {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #ddd; /* Lighter border for individual cells */
+  padding: 0;
+  text-align: center;
+}
+
+input {
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  font-size: 18px;
+  border: none;
+  outline: none;
+}
+
+/* Thicker horizontal lines separating the 3x3 blocks */
+tr:nth-child(3n) td {
+  border-bottom: 3px solid #000; /* Thicker bottom border for every third row */
+}
+
+/* Thicker vertical lines separating the 3x3 blocks */
+td:nth-child(3n) {
+  border-right: 3px solid #000; /* Thicker right border for every third column */
+}
+
+/* Ensuring thick borders for the outermost edge */
+td:nth-child(9) {
+  border-right: 3px solid #000; /* Rightmost column */
+}
+
+tr:nth-child(9) td {
+  border-bottom: 3px solid #000; /* Bottom-most row */
+}
+
+/* Styles for input fields */
+input:disabled {
+  background-color: #eee;
+  font-weight: bold;
+  color: black;
+}
+
+/* Styling for correct and incorrect inputs */
+.wrong {
+  color: red;
+}
+
+.correct {
+  color: blue;
+}
+
+/* Button styles */
+button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 16px;
+}
