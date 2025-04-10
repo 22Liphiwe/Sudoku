@@ -18,6 +18,7 @@
     table {
       margin: auto;
       border-collapse: collapse;
+      border: 3px solid #000; /* Thick border around the entire grid */
     }
 
     td {
@@ -25,6 +26,7 @@
       height: 40px;
       border: 1px solid #999;
       padding: 0;
+      text-align: center;
     }
 
     input {
@@ -33,22 +35,24 @@
       text-align: center;
       font-size: 18px;
       border: none;
+      outline: none;
     }
 
+    /* Thicker lines separating the 3x3 blocks */
     tr:nth-child(3n) td {
-      border-bottom: 2px solid #000;
+      border-bottom: 3px solid #000;
     }
 
     td:nth-child(3n) {
-      border-right: 2px solid #000;
+      border-right: 3px solid #000;
     }
 
     td:nth-child(1) {
-      border-left: 2px solid #000;
+      border-left: 3px solid #000;
     }
 
     tr:nth-child(1) td {
-      border-top: 2px solid #000;
+      border-top: 3px solid #000;
     }
 
     input:disabled {
