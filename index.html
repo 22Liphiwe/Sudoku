@@ -1,6 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sudoku Game</title>
   <style>
     body {
@@ -76,48 +78,97 @@
   <button onclick="checkBoard()">Check</button>
 
   <script>
-    // Predefined solution and puzzle (you can add more later)
-    const solution = [
-      [5,3,4,6,7,8,9,1,2],
-      [6,7,2,1,9,5,3,4,8],
-      [1,9,8,3,4,2,5,6,7],
-      [8,5,9,7,6,1,4,2,3],
-      [4,2,6,8,5,3,7,9,1],
-      [7,1,3,9,2,4,8,5,6],
-      [9,6,1,5,3,7,2,8,4],
-      [2,8,7,4,1,9,6,3,5],
-      [3,4,5,2,8,6,1,7,9]
-    ];
+    // Generate a solved Sudoku grid using backtracking
+    function generateBoard() {
+      const board = Array.from({ length: 9 }, () => Array(9).fill(0));
 
-    const puzzle = [
-      [5,3,'','',7,'','','',''],
-      [6,'','',1,9,5,'','',''],
-      ['','',8,'','','','',6,''],
-      [8,'','','',6,'','','',3],
-      [4,'','',8,'',3,'','',1],
-      [7,'','','',2,'','','',6],
-      ['','',6,'','','',2,8,''],
-      ['','','',4,1,9,'','',5],
-      ['','','','',8,'','',7,9]
-    ];
+      function isSafe(board, row, col, num) {
+        for (let i = 0; i < 9; i++) {
+          if (board[row][i] === num || board[i][col] === num) {
+            return false;
+          }
+        }
 
-    const board = document.getElementById('sudoku-board');
+        const boxRowStart = Math.floor(row / 3) * 3;
+        const boxColStart = Math.floor(col / 3) * 3;
 
-    for (let i = 0; i < 9; i++) {
-      const row = document.createElement('tr');
-      for (let j = 0; j < 9; j++) {
-        const cell = document.createElement('td');
-        const input = document.createElement('input');
-        input.setAttribute('maxlength', 1);
-        input.dataset.row = i;
-        input.dataset.col = j;
+        for (let r = 0; r < 3; r++) {
+          for (let c = 0; c < 3; c++) {
+            if (board[boxRowStart + r][boxColStart + c] === num) {
+              return false;
+            }
+          }
+        }
 
-        const value = puzzle[i][j];
-        if (value !== '') {
-          input.value = value;
-          input.disabled = true;
-        } else {
-          // Restrict input to 1-9 only
+        return true;
+      }
+
+      function solve(board) {
+        for (let row = 0; row < 9; row++) {
+          for (let col = 0; col < 9; col++) {
+            if (board[row][col] === 0) {
+              for (let num = 1; num <= 9; num++) {
+                if (isSafe(board, row, col, num)) {
+                  board[row][col] = num;
+                  if (solve(board)) {
+                    return true;
+                  }
+                  board[row][col] = 0;
+                }
+              }
+              return false;
+            }
+          }
+        }
+        return true;
+      }
+
+      solve(board);
+      return board;
+    }
+
+    // Remove some numbers to create the puzzle
+    function createPuzzle(solvedBoard, difficulty = 'medium') {
+      const board = JSON.parse(JSON.stringify(solvedBoard));
+      let removeCount = difficulty === 'easy' ? 30 : difficulty === 'hard' ? 45 : 40;
+
+      while (removeCount > 0) {
+        const row = Math.floor(Math.random() * 9);
+        const col = Math.floor(Math.random() * 9);
+
+        if (board[row][col] !== 0) {
+          board[row][col] = 0;
+          removeCount--;
+        }
+      }
+
+      return board;
+    }
+
+    // Ensure the board is generated every time the page loads
+    window.onload = function() {
+      const solvedBoard = generateBoard();
+      const puzzleBoard = createPuzzle(solvedBoard);
+
+      const table = document.getElementById('sudoku-board');
+      let inputs = [];
+
+      // Render the puzzle board
+      for (let i = 0; i < 9; i++) {
+        const row = document.createElement('tr');
+        for (let j = 0; j < 9; j++) {
+          const cell = document.createElement('td');
+          const input = document.createElement('input');
+          input.setAttribute('maxlength', 1);
+          input.dataset.row = i;
+          input.dataset.col = j;
+
+          // Display pre-filled values and disable them
+          if (puzzleBoard[i][j] !== 0) {
+            input.value = puzzleBoard[i][j];
+            input.disabled = true;
+          }
+
           input.addEventListener('input', (e) => {
             const val = e.target.value;
             if (!/^[1-9]$/.test(val)) {
@@ -128,7 +179,7 @@
 
             const row = parseInt(e.target.dataset.row);
             const col = parseInt(e.target.dataset.col);
-            if (parseInt(val) === solution[row][col]) {
+            if (parseInt(val) === solvedBoard[row][col]) {
               e.target.classList.add('correct');
               e.target.classList.remove('wrong');
             } else {
@@ -136,14 +187,15 @@
               e.target.classList.remove('correct');
             }
           });
+
+          cell.appendChild(input);
+          row.appendChild(cell);
         }
-
-        cell.appendChild(input);
-        row.appendChild(cell);
+        table.appendChild(row);
       }
-      board.appendChild(row);
-    }
+    };
 
+    // Check the board for correctness
     function checkBoard() {
       const inputs = document.querySelectorAll('input:not([disabled])');
       let allCorrect = true;
@@ -152,7 +204,7 @@
         const col = parseInt(input.dataset.col);
         const val = parseInt(input.value);
 
-        if (val === solution[row][col]) {
+        if (val === solvedBoard[row][col]) {
           input.classList.add('correct');
           input.classList.remove('wrong');
         } else {
