@@ -24,7 +24,7 @@
     td {
       width: 40px;
       height: 40px;
-      border: 1px solid #999;
+      border: 1px solid #999; /* Default thin border for cells */
       padding: 0;
       text-align: center;
     }
@@ -38,21 +38,23 @@
       outline: none;
     }
 
-    /* Thicker lines separating the 3x3 blocks */
+    /* Thicker horizontal lines separating the 3x3 blocks */
     tr:nth-child(3n) td {
-      border-bottom: 3px solid #000;
+      border-bottom: 3px solid #000; /* Thicker bottom border for every third row */
     }
 
+    /* Thicker vertical lines separating the 3x3 blocks */
     td:nth-child(3n) {
-      border-right: 3px solid #000;
+      border-right: 3px solid #000; /* Thicker right border for every third column */
     }
 
-    td:nth-child(1) {
-      border-left: 3px solid #000;
+    /* Ensuring thick borders for the outermost edge */
+    td:nth-child(9) {
+      border-right: 3px solid #000; /* Rightmost column */
     }
 
-    tr:nth-child(1) td {
-      border-top: 3px solid #000;
+    tr:nth-child(9) td {
+      border-bottom: 3px solid #000; /* Bottom-most row */
     }
 
     input:disabled {
